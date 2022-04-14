@@ -1,0 +1,11 @@
+/u01/os_vtt_gitlab/backup_gitlab_new/logs/*.log {
+    weekly
+    size 10M
+    create 0644 git gitlabsecrets
+    missingok
+    rotate 3 
+    compress 
+    delaycompress
+    notifempty
+    copytruncate
+}
