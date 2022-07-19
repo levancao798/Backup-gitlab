@@ -19,8 +19,26 @@ NONE='\033[0m'
 
 #paramaters
 # GITLAB_RESTORE="/u01/os_vtt_gitlab/gitlab/gitlab_backups/Weekly"
-GITLAB_RESTORE="/u01/os_vtt_gitlab/gitlab/gitlab_backups/Full-backup"
-GITLAB_DATA="/u01/os_vtt_gitlab/gitlab/data_gitlab/git-data"
+
+quietRake=1 #default flag to run
+TIMESTAMP=`date +"%Y-%m-%d"`
+HOSTNAME="192.168.3.57"
+REMOTE_FILE_PATH="git@$HOSTNAME:"
+GLB_ETC="/etc/gitlab"
+GLB_LFS="/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
+#GLB_HOME="/u01/os_vtt_gitlab/backup_gitlab_new"
+# GLB_HOME="/u01/os_vtt_gitlab/cnspht/projects/gitlab_backup"
+GLB_HOME="/u01/os_vtt_gitlab/gitlab"
+
+GLB_BACKUP=$GLB_HOME"/gitlab_backups"
+GLB_SNAPSHOT=$GLB_BACKUP"/snapshot"
+TMP=$GLB_HOME"/tmp"
+# GLB_WEEKLY=$GLB_BACKUP"/Full-backup"
+GLB_WEEKLY=$GLB_BACKUP"/Weekly"
+GLB_DAILY=$GLB_BACKUP"/Daily"
+GLB_DATA="/u01/os_vtt_gitlab/gitlab/data_gitlab/git-data"
+GLB_REPO=$GLB_DATA"/repositories/"
+GLB_SSH_KEY="/var/opt/gitlab/.ssh"
 # Checking if this script is executed by user 'git'
 # if [ $(whoami) != "root" ]; then
 #     printf "Please execute this script with user 'root'"
@@ -35,20 +53,32 @@ stopProcesses () {
 }
 
 # STEP2. Extract Backup file
-extractBackupFile() {
+extractFile() {
   printf "${GREEN} STEP2. Extracting backup file ${NONE}\n"
-  if [[ -w $GITLAB_RESTORE ]] 
+  if [[ -w $GLB_BACKUP ]] 
   then
-    cd $GITLAB_RESTORE/$version
-    cp *gitlabBackup* /var/opt/gitlab/backups/$version"_gitlab_backup.tar" 
-    chmod 755 /var/opt/gitlab/backups/$version"_gitlab_backup.tar"
-    ls *.gz |xargs -n1 tar -xvzf
+    cd $1
+    cp *gitlabBackup* /var/opt/gitlab/backups/$1"_gitlab_backup.tar" 
+    chmod 755 /var/opt/gitlab/backups/$1"_gitlab_backup.tar"
+    ls *.tar |xargs -n1 tar -xvf
     mv u01/os_vtt_gitlab/gitlab/data_gitlab/git-data/repositories/ /u01/os_vtt_gitlab/gitlab/data_gitlab/git-data -n
     mv var/opt/gitlab/.ssh/authorized_keys /var/opt/gitlab/.ssh -n
     mv etc/gitlab/ /etc -n
   else
-    printf "${RED} $GITLAB_RESTORE is not writable. ${NONE} \n"
+    printf "${RED} $GLB_BACKUP is not writable. ${NONE} \n"
   fi
+}
+restoreBackupfile(){
+    cd $GLB_WEEKLY
+    version_full=
+    extractFile "$version_full"
+    
+    cd $GLB_DAILY
+    version_incre= 
+    list=
+    for i in $list; do 
+        ls -d */|sort -n |xargs extractFile
+    done
 }
 
 restoreGitlab () {
@@ -77,21 +107,34 @@ permsFixBase() {
 # 	
 }
 
+# selectFull(){
+    
+# }
+
 run () {
-    version=$1
-    printf "Backup version is: $version"    
-    stopProcesses
-    extractBackupFile
-    permsFixBase
-    restoreGitlab
-    reconfigureGitlab
+    version_full=$1
+    version_incre=$2
+    printf "version full is: $version_full" 
+    printf "version incre is: $version_incre"    
+    
+    # stopProcesses
+    # extractFile $version_full
+
+    # extractFile $version_incre
+    # extractBackupFile
+    # permsFixBase
+    # restoreGitlab
+    # reconfigureGitlab
 }
      
-select version in $(ls -A $GITLAB_RESTORE) exit; do 
-    case $version in
-        exit) printf "Exiting"
-            exit 1 ;;
-           *) run $version
-	    break ;;
-    esac
+select version_full in $(ls -A $GLB_WEEKLY) exit; do 
+    select version_incre in $(ls -A $GLB_DAILY) exit; do
+        case $version_incre in
+            exit) printf "Exiting"
+                exit 1 ;;
+            *) run $version_full $version_incre
+            break ;;
+            
+        esac
+    done
 done
