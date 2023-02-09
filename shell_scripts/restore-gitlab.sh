@@ -5,9 +5,9 @@
 #       $ sudo groupadd gitlabsecrets
 #       $ sudo usermod -a -G gitlabsecrets git
 #       $ sudo usermod -a -G gitlabsecrets root
-#       $ sudo chgrp -R gitlabsecrets /u01/os_vtt_gitlab/gitlab/
+#       $ sudo chgrp -R gitlabsecrets /u01/gitlab_home_folder/gitlab/
 #       $ sudo chgrp -R gitlabsecrets /etc/gitlab/
-#       $ sudo chmod g+rw /u01/os_vtt_gitlab/gitlab/gitlab_backups/ -R
+#       $ sudo chmod g+rw /u01/gitlab_home_folder/gitlab/gitlab_backups/ -R
 #       $ sudo chmod g+rw /etc/gitlab/ -R
 
 
@@ -18,7 +18,7 @@ YELLOW='\033[0;33m'
 NONE='\033[0m' 
 
 #paramaters
-# GITLAB_RESTORE="/u01/os_vtt_gitlab/gitlab/gitlab_backups/Weekly"
+# GITLAB_RESTORE="/u01/gitlab_home_folder/gitlab/gitlab_backups/Weekly"
 
 quietRake=1 #default flag to run
 TIMESTAMP=`date +"%Y-%m-%d"`
@@ -26,9 +26,9 @@ HOSTNAME="192.168.3.57"
 REMOTE_FILE_PATH="git@$HOSTNAME:"
 GLB_ETC="/etc/gitlab"
 GLB_LFS="/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
-#GLB_HOME="/u01/os_vtt_gitlab/backup_gitlab_new"
-# GLB_HOME="/u01/os_vtt_gitlab/cnspht/projects/gitlab_backup"
-GLB_HOME="/u01/os_vtt_gitlab/gitlab"
+#GLB_HOME="/u01/gitlab_home_folder/backup_gitlab_new"
+# GLB_HOME="/u01/gitlab_home_folder/cnspht/projects/gitlab_backup"
+GLB_HOME="/u01/gitlab_home_folder/gitlab"
 
 GLB_BACKUP=$GLB_HOME"/gitlab_backups"
 GLB_SNAPSHOT=$GLB_BACKUP"/snapshot"
@@ -36,7 +36,7 @@ TMP=$GLB_HOME"/tmp"
 # GLB_WEEKLY=$GLB_BACKUP"/Full-backup"
 GLB_WEEKLY=$GLB_BACKUP"/Weekly"
 GLB_DAILY=$GLB_BACKUP"/Daily"
-GLB_DATA="/u01/os_vtt_gitlab/gitlab/data_gitlab/git-data"
+GLB_DATA="/u01/gitlab_home_folder/gitlab/data_gitlab/git-data"
 GLB_REPO=$GLB_DATA"/repositories/"
 GLB_SSH_KEY="/var/opt/gitlab/.ssh"
 # Checking if this script is executed by user 'git'
@@ -61,7 +61,7 @@ extractFile() {
     cp *gitlabBackup* /var/opt/gitlab/backups/$1"_gitlab_backup.tar" 
     chmod 755 /var/opt/gitlab/backups/$1"_gitlab_backup.tar"
     ls *.tar |xargs -n1 tar -xvf
-    mv u01/os_vtt_gitlab/gitlab/data_gitlab/git-data/repositories/ /u01/os_vtt_gitlab/gitlab/data_gitlab/git-data -n
+    mv u01/gitlab_home_folder/gitlab/data_gitlab/git-data/repositories/ /u01/gitlab_home_folder/gitlab/data_gitlab/git-data -n
     mv var/opt/gitlab/.ssh/authorized_keys /var/opt/gitlab/.ssh -n
     mv etc/gitlab/ /etc -n
   else

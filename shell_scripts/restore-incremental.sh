@@ -5,9 +5,9 @@
 #       $ sudo groupadd gitlabsecrets
 #       $ sudo usermod -a -G gitlabsecrets git
 #       $ sudo usermod -a -G gitlabsecrets root
-#       $ sudo chgrp -R gitlabsecrets /u01/os_vtt_gitlab/gitlab/
+#       $ sudo chgrp -R gitlabsecrets /u01/gitlab_home_folder/gitlab/
 #       $ sudo chgrp -R gitlabsecrets /etc/gitlab/
-#       $ sudo chmod g+rw /u01/os_vtt_gitlab/gitlab/gitlab_backups/ -R
+#       $ sudo chmod g+rw /u01/gitlab_home_folder/gitlab/gitlab_backups/ -R
 #       $ sudo chmod g+rw /etc/gitlab/ -R
 
 
@@ -18,10 +18,10 @@ YELLOW='\033[0;33m'
 NONE='\033[0m' 
 
 #paramaters
-# GITLAB_RESTORE="/u01/os_vtt_gitlab/gitlab/gitlab_backups/Weekly"
-GITLAB_RESTORE="/u01/os_vtt_gitlab/gitlab/gitlab_backups/Daily"
-GITLAB_DATA="/u01/os_vtt_gitlab/gitlab/data_gitlab/git-data"
-GLB_HOME="/u01/os_vtt_gitlab/backup_gitlab_new"
+# GITLAB_RESTORE="/u01/gitlab_home_folder/gitlab/gitlab_backups/Weekly"
+GITLAB_RESTORE="/u01/gitlab_home_folder/gitlab/gitlab_backups/Daily"
+GITLAB_DATA="/u01/gitlab_home_folder/gitlab/data_gitlab/git-data"
+GLB_HOME="/u01/gitlab_home_folder/backup_gitlab_new"
 GLB_BACKUP=$GLB_HOME"/gitlab_backups"
 GLB_SNAPSHOT=$GLB_BACKUP"/snapshot"
 TMP=$GLB_HOME"/tmp"
@@ -55,7 +55,7 @@ extractBackupFile() {
     echo "start compressing $REPO_NAME ..."
     tar --extract --list-incremental=/dev/null --file $GLB_SNAPSHOT/$REPO_NAME.sngz
     done < "$input"  
-    mv u01/os_vtt_gitlab/gitlab/data_gitlab/git-data/repositories/ /u01/os_vtt_gitlab/gitlab/data_gitlab/git-data -n
+    mv u01/gitlab_home_folder/gitlab/data_gitlab/git-data/repositories/ /u01/gitlab_home_folder/gitlab/data_gitlab/git-data -n
     mv var/opt/gitlab/.ssh/authorized_keys /var/opt/gitlab/.ssh -n
     mv etc/gitlab/ /etc -n
   else

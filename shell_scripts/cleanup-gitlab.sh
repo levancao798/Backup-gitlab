@@ -1,17 +1,17 @@
 #!/bin/bash
 # How to run:
-#   1. Place this script in /u01/os_vtt_gitlab/gitlab/shell_scripts/
+#   1. Place this script in /u01/gitlab_home_folder/gitlab/shell_scripts/
 #   2. Switch to user 'git' and open crontab
 #       $ sudo su git && crontab -e
 #   3. Paste the following script:
-#       "0 0 * * * bash /u01/os_vtt_gitlab/gitlab/shell-script/cleanup-gitlab.sh"
+#       "0 0 * * * bash /u01/gitlab_home_folder/gitlab/shell-script/cleanup-gitlab.sh"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NONE='\033[0m'
 
-GLB_BACKUP_DAILY="/u01/os_vtt_gitlab/backup_gitlab_new/gitlab_backups/Daily"
-GLB_BACKUP_WEEKLY="/u01/os_vtt_gitlab/backup_gitlab_new/gitlab_backups/Weekly"
+GLB_BACKUP_DAILY="/u01/gitlab_home_folder/backup_gitlab_new/gitlab_backups/Daily"
+GLB_BACKUP_WEEKLY="/u01/gitlab_home_folder/backup_gitlab_new/gitlab_backups/Weekly"
 
 #before: into folder need actions
 cd $GLB_BACKUP_DAILY

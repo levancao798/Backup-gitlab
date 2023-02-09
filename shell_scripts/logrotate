@@ -1,4 +1,4 @@
-/u01/os_vtt_gitlab/backup_gitlab_new/logs/*.log {
+/u01/gitlab_home_folder/backup_gitlab_new/logs/*.log {
     weekly
     size 10M
     create 0644 git gitlabsecrets

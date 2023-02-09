@@ -1,11 +1,11 @@
 #!/bin/bash
 # On server 10.255.60.6:
 #   1. Create folders: 
-#       + /u01/os_vtt_gitlab/gitlab/gitlab_backups
-#       + /u01/os_vtt_gitlab/gitlab/gitlab_backups/Weekly
-#       + /u01/os_vtt_gitlab/gitlab/gitlab_backups/Daily
-#       + /u01/os_vtt_gitlab/gitlab/tmp
-#       + /u01/os_vtt_gitlab/gitlab/shell-script
+#       + /u01/gitlab_home_folder/gitlab/gitlab_backups
+#       + /u01/gitlab_home_folder/gitlab/gitlab_backups/Weekly
+#       + /u01/gitlab_home_folder/gitlab/gitlab_backups/Daily
+#       + /u01/gitlab_home_folder/gitlab/tmp
+#       + /u01/gitlab_home_folder/gitlab/shell-script
 #
 #   2. Give user 'git' read permissions to GitLab's secrets
 #       Check user and group in linux: less /etc/passwd|grep git
@@ -14,9 +14,9 @@
 #       $ sudo groupadd gitlabsecrets
 #       $ sudo usermod -a -G gitlabsecrets git
 #       $ sudo usermod -a -G gitlabsecrets root
-#       $ sudo chgrp -R gitlabsecrets /u01/os_vtt_gitlab/gitlab/
+#       $ sudo chgrp -R gitlabsecrets /u01/gitlab_home_folder/gitlab/
 #       $ sudo chgrp -R gitlabsecrets /etc/gitlab/
-#       $ sudo chmod g+rw /u01/os_vtt_gitlab/gitlab/ -R
+#       $ sudo chmod g+rw /u01/gitlab_home_folder/gitlab/ -R
 #       $ sudo chmod g+rw /etc/gitlab/ -R
 #
 #   3. Create ssh key for user 'git'
@@ -26,22 +26,22 @@
 #
 # On remote server: 
 #   1. Create folder 
-#       + /u01/os_vtt_gitlab/gitlab/gitlab_backups/Daily/
-#       + /u01/os_vtt_gitlab/gitlab/gitlab_backups/Weekly/
-#       + /u01/os_vtt_gitlab/gitlab/gitlab_backups/ 
+#       + /u01/gitlab_home_folder/gitlab/gitlab_backups/Daily/
+#       + /u01/gitlab_home_folder/gitlab/gitlab_backups/Weekly/
+#       + /u01/gitlab_home_folder/gitlab/gitlab_backups/ 
 #   2. Add git@10.255.60.6's public key to remote server authorized keys
 #       + Copy git@10.255.60.6's id_rsa.pub
 #       + Paste into git@remote_server's ~/.ssh/authorized_keys
 #
 # How to run manually:
 #      Change Hostname to correctly "vim backup-gitlab-weekly.sh"
-#      $ cd /u01/os_vtt_gitlab/gitlab/shell-script/
+#      $ cd /u01/gitlab_home_folder/gitlab/shell-script/
 #      $ sudo chmod +x *
 #      $ ./backup-gitlab-weekly.sh
 #
 # Crontab:
 #      $ crontab -e
-#      $ "0 0 * * SAT bash /u01/os_vtt_gitlab/gitlab/shell-script/backup-gitlab-weekly.sh" #At 00:00 on Saturday.
+#      $ "0 0 * * SAT bash /u01/gitlab_home_folder/gitlab/shell-script/backup-gitlab-weekly.sh" #At 00:00 on Saturday.
 
 #highligh
 RED='\033[0;31m'
@@ -56,15 +56,15 @@ HOSTNAME="192.168.3.57"
 REMOTE_FILE_PATH="git@$HOSTNAME:"
 GLB_ETC="/etc/gitlab"
 GLB_LFS="/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
-#GLB_HOME="/u01/os_vtt_gitlab/backup_gitlab_new"
-GLB_HOME="/u01/os_vtt_gitlab/cnspht/projects/gitlab_backup"
+#GLB_HOME="/u01/gitlab_home_folder/backup_gitlab_new"
+GLB_HOME="/u01/gitlab_home_folder/cnspht/projects/gitlab_backup"
 GLB_BACKUP=$GLB_HOME"/gitlab_backups"
 GLB_SNAPSHOT=$GLB_BACKUP"/snapshot"
 TMP=$GLB_HOME"/tmp"
 # GLB_WEEKLY=$GLB_BACKUP"/Weekly"
 GLB_WEEKLY=$GLB_BACKUP"/Full-backup"
 GLB_DAILY=$GLB_BACKUP"/Daily"
-GLB_DATA="/u01/os_vtt_gitlab/gitlab/data_gitlab/git-data"
+GLB_DATA="/u01/gitlab_home_folder/gitlab/data_gitlab/git-data"
 GLB_REPO=$GLB_DATA"/repositories/"
 GLB_SSH_KEY="/var/opt/gitlab/.ssh"
 # SINCE_TIME="0h" #default 00:00:00 +0700 today
